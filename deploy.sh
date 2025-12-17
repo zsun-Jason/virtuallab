@@ -44,7 +44,6 @@ fi
 
 # 3. 设置权限
 echo "🔐 设置文件权限..."
-chown -R www-data:www-data ${DEPLOY_PATH}/dist
 chmod -R 755 ${DEPLOY_PATH}/dist
 echo "✅ 权限设置完成"
 
