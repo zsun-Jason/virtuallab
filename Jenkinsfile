@@ -1,6 +1,10 @@
 pipeline {
     agent any
     
+    tools {
+        nodejs 'NodeJS 20.19.0'  // 必须与Global Tool Configuration中配置的名称一致
+    }
+    
     environment {
         NODE_VERSION = '20.19.0'
         DEPLOY_SERVER = 'your-ubuntu-server-ip'
@@ -57,25 +61,26 @@ pipeline {
             }
         }
         
-        stage('Deploy to Ubuntu Server') {
-            steps {
-                echo '🚀 部署到Ubuntu服务器...'
-                script {
-                    sh """
-                        # 压缩构建产物
-                        tar -czf dist.tar.gz dist/
-                        
-                        # 上传到服务器
-                        scp dist.tar.gz ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-                        scp deploy.sh ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-                        scp ecosystem.config.js ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-                        
-                        # 在服务器上执行部署脚本
-                        ssh ${DEPLOY_USER}@${DEPLOY_SERVER} "cd ${DEPLOY_PATH} && bash deploy.sh"
-                    """
-                }
-            }
-        }
+        // 暂时注释Deploy阶段，等Ubuntu服务器配置完成后再启用
+        // stage('Deploy to Ubuntu Server') {
+        //     steps {
+        //         echo '🚀 部署到Ubuntu服务器...'
+        //         script {
+        //             sh """
+        //                 # 压缩构建产物
+        //                 tar -czf dist.tar.gz dist/
+        //                 
+        //                 # 上传到服务器
+        //                 scp dist.tar.gz ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+        //                 scp deploy.sh ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+        //                 scp ecosystem.config.js ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+        //                 
+        //                 # 在服务器上执行部署脚本
+        //                 ssh ${DEPLOY_USER}@${DEPLOY_SERVER} "cd ${DEPLOY_PATH} && bash deploy.sh"
+        //             """
+        //         }
+        //     }
+        // }
     }
     
     post {
