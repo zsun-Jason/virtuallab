@@ -181,6 +181,110 @@
         </el-card>
       </el-col>
     </el-row>
+    
+    <!-- 实验指导手册 -->
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <h3>📖 实验指导手册</h3>
+          </template>
+          
+          <el-collapse v-model="activeSteps" accordion>
+            <el-collapse-item title="📚 实验目的与原理" name="1">
+              <div style="padding: 10px;">
+                <h4 style="color: #409EFF; margin-top: 0;">一、实验目的</h4>
+                <p>1. 理解状态空间表示法的基本概念</p>
+                <p>2. 掌握状态方程和输出方程的建立方法</p>
+                <p>3. 学会判断系统的可控性和可观性</p>
+                <p>4. 理解特征值与系统稳定性的关系</p>
+                <p>5. 掌握相平面轨迹的绘制与分析</p>
+                
+                <h4 style="color: #409EFF;">二、状态空间模型</h4>
+                <p><strong>状态方程：</strong>ẋ(t) = Ax(t) + Bu(t)</p>
+                <p><strong>输出方程：</strong>y(t) = Cx(t) + Du(t)</p>
+                <p>其中A为系统矩阵，B为输入矩阵，C为输出矩阵，D为直接传递矩阵</p>
+                
+                <h4 style="color: #409EFF;">三、可控性与可观性</h4>
+                <p><strong>可控性：</strong>能否通过输入在有限时间内控制所有状态</p>
+                <p><strong>判据：</strong>可控性矩阵Qc = [B, AB, A²B, ...] 满秩</p>
+                <p><strong>可观性：</strong>能否通过输出唯一确定初始状态</p>
+                <p><strong>判据：</strong>可观性矩阵Qo = [C; CA; CA²; ...] 满秩</p>
+                
+                <p style="background: #f0f9ff; padding: 10px; border-left: 4px solid #409EFF;">
+                  <strong>特征值与稳定性：</strong><br>
+                  • 所有特征值实部<0 → 渐近稳定<br>
+                  • 存在特征值实部>0 → 不稳定<br>
+                  • 特征值实部=0 → 临界稳定
+                </p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="🔬 实验步骤" name="2">
+              <div style="padding: 10px;">
+                <h4 style="color: #67C23A; margin-top: 0;">步骤1：稳定性判断</h4>
+                <p>• A=[[0,1],[-2,-3]]（默认值）</p>
+                <p>• 点击"开始仿真"，观察特征值</p>
+                <p><strong>观察：</strong>特征值全为负实部→系统稳定</p>
+                
+                <p><strong>步骤2：不稳定系统</strong></p>
+                <p>• 修改A为[[0,1],[2,3]]（注意正号）</p>
+                <p><strong>观察：</strong>出现正实部特征值→系统发散</p>
+                
+                <p><strong>步骤3：可控性/可观性测试</strong></p>
+                <p>• 默认参数下，系统可控可观</p>
+                <p>• 修改B=[[1],[0]]，观察可控性变化</p>
+                <p>• 修改C=[[0,1]]，观察可观性变化</p>
+                
+                <p><strong>步骤4：相平面分析</strong></p>
+                <p>• 输入类型选"脉冲"</p>
+                <p>• 观察相平面轨迹：稳定系统螺旋收敛</p>
+                <p>• 试验A=[[0,1],[-4,0]]，观察闭合椭圆（中心点）</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="📊 实验报告要求" name="3">
+              <div style="padding: 10px;">
+                <h4 style="color: #E6A23C; margin-top: 0;">记录内容：</h4>
+                <p><strong>1. 系统特性表</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                  <thead>
+                    <tr style="background: #f5f7fa;">
+                      <th style="border: 1px solid #ddd; padding: 8px;">A矩阵</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">特征值</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳定性</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">可控/可观</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">[[0,1],[-2,-3]]</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <p><strong>2. 思考题</strong></p>
+                <p>① 为什么可控性和可观性重要？</p>
+                <p>② 相平面轨迹旋转方向由什么决定？</p>
+                <p>③ 状态空间法与传递函数法的优缺点？</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="💡 扩展挑战" name="4">
+              <div style="padding: 10px;">
+                <h4 style="color: #F56C6C; margin-top: 0;">高级任务：</h4>
+                <p><strong>挑战1：</strong>研究极点配置，设计状态反馈K使特征值为期望值</p>
+                <p><strong>挑战2：</strong>设计Luenberger观测器估计不可测状态</p>
+                <p><strong>挑战3：</strong>学习LQR最优控制，调整Q、R权重矩阵</p>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -189,6 +293,8 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { VideoPlay } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+
+const activeSteps = ref([])  // 默认全部收起
 
 const responseChart = ref<HTMLElement | null>(null)
 const phaseChart = ref<HTMLElement | null>(null)

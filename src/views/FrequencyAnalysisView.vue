@@ -59,6 +59,108 @@
         </el-card>
       </el-col>
     </el-row>
+    
+    <!-- 实验指导手册 -->
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <h3>📖 实验指导手册</h3>
+          </template>
+          
+          <el-collapse v-model="activeSteps" accordion>
+            <el-collapse-item title="📚 实验目的与原理" name="1">
+              <div style="padding: 10px;">
+                <h4 style="color: #409EFF; margin-top: 0;">一、实验目的</h4>
+                <p>1. 理解频域分析的基本概念和物理意义</p>
+                <p>2. 掌握Bode图和Nyquist图的绘制与分析方法</p>
+                <p>3. 学会通过频域特性判断系统稳定性和性能</p>
+                <p>4. 掌握相位裕度、幅值裕度等关键指标的计算</p>
+                
+                <h4 style="color: #409EFF;">二、频域分析理论</h4>
+                <p><strong>传递函数：</strong>G(s) = N(s) / D(s)</p>
+                <p>将s替换为jω，得到频率响应函数G(jω)</p>
+                <p><strong>• 幅频特性：</strong>|G(jω)| = 系统对不同频率输入的增益</p>
+                <p><strong>• 相频特性：</strong>∠G(jω) = 系统对不同频率输入的相位滞后</p>
+                
+                <h4 style="color: #409EFF;">三、Bode图（伯德图）</h4>
+                <p><strong>组成：</strong>两个图——幅值图和相位图</p>
+                <p><strong>幅值图：</strong>纵轴为20log|G(jω)| (dB)，横轴为logω（对数频率）</p>
+                <p><strong>相位图：</strong>纵轴为∠G(jω) (°)，横轴为logω</p>
+                
+                <h4 style="color: #409EFF;">四、Nyquist图</h4>
+                <p><strong>定义：</strong>在复平面上绘制G(jω)的轨迹，ω从0→∞</p>
+                <p><strong>应用：</strong>奈奎斯特稳定判据——通过曲线包围(-1,0)点判断闭环稳定性</p>
+                
+                <p style="background: #f0f9ff; padding: 10px; border-left: 4px solid #409EFF;">
+                  <strong>关键指标：</strong><br>
+                  • <strong>截止频率ωc：</strong>幅值穿越0dB的频率<br>
+                  • <strong>相位裕度PM：</strong>在ωc处，相位距离-180°的余量，PM>45°系统稳定<br>
+                  • <strong>幅值裕度GM：</strong>在相位-180°处，幅值距离0dB的余量
+                </p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="🔬 实验步骤" name="2">
+              <div style="padding: 10px;">
+                <h4 style="color: #67C23A; margin-top: 0;">步骤1：一阶系统Bode图</h4>
+                <p>• 选择预设："一阶系统"，G(s) = 1/(s+1)</p>
+                <p>• 点击"绘制Bode图"</p>
+                <p><strong>观察：</strong>幅值低频0dB，高频-20dB/dec；相位0°→-90°</p>
+                
+                <p><strong>步骤2：二阶系统</strong></p>
+                <p>• 选择"二阶系统"，观察-40dB/dec斜率</p>
+                
+                <p><strong>步骤3：Nyquist图</strong></p>
+                <p>• 绘制Nyquist图，观察是否包围(-1,0)点</p>
+                
+                <p><strong>步骤4：稳定性判断</strong></p>
+                <p>• 自定义传递函数，读取ωc和PM</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="📊 实验报告要求" name="3">
+              <div style="padding: 10px;">
+                <h4 style="color: #E6A23C; margin-top: 0;">记录内容：</h4>
+                <p><strong>1. 特性对比表</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                  <thead>
+                    <tr style="background: #f5f7fa;">
+                      <th style="border: 1px solid #ddd; padding: 8px;">传递函数</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">截止频率</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">相位裕度</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳定性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">1/(s+1)</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <p><strong>2. 思考题</strong></p>
+                <p>① Bode图为什么用dB表示？</p>
+                <p>② Nyquist图包围(-1,0)点意味着什么？</p>
+                <p>③ PM=60°和PM=30°哪个更稳定？</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="💡 扩展挑战" name="4">
+              <div style="padding: 10px;">
+                <h4 style="color: #F56C6C; margin-top: 0;">高级任务：</h4>
+                <p><strong>挑战1：</strong>研究带宽与上升时间关系(上升时间≈2.2/ωc)</p>
+                <p><strong>挑战2：</strong>分析非最小相位系统G(s)=(1-s)/(1+s)</p>
+                <p><strong>挑战3：</strong>设计超前校正器提升相位裕度</p>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -66,6 +168,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { TransferFunction } from '../utils/control'
+
+const activeSteps = ref([])  // 默认全部收起
 
 const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null

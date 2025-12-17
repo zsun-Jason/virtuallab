@@ -171,6 +171,71 @@
         </el-card>
       </el-col>
     </el-row>
+    
+    <!-- 实验指导手册 -->
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <h3>📖 实验指导手册</h3>
+          </template>
+          
+          <el-collapse v-model="activeSteps" accordion>
+            <el-collapse-item title="📚 实验目的与原理" name="1">
+              <div style="padding: 10px;">
+                <h4 style="color: #409EFF; margin-top: 0;">一、实验目的</h4>
+                <p>1. 理解PLC工作原理和循环扫描机制</p>
+                <p>2. 掌握梯形图编程语言基本元素</p>
+                <p>3. 学会常用控制电路的梯形图实现</p>
+                
+                <h4 style="color: #409EFF;">二、PLC原理</h4>
+                <p><strong>工作方式：</strong>循环扫描（输入采样→程序执行→输出刷新）</p>
+                
+                <h4 style="color: #409EFF;">三、梯形图元素</h4>
+                <p><strong>常开触点─┤├─：</strong>地址为1时闭合</p>
+                <p><strong>常闭触点─┤/├─：</strong>地址为0时闭合</p>
+                <p><strong>输出线圈─( )─：</strong>左侧为真时得电</p>
+                
+                <p><strong>地址编码：</strong>X0-X7输入，Y0-Y7输出，M0-M99中间继电器</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="🔬 实验步骤" name="2">
+              <div style="padding: 10px;">
+                <h4 style="color: #67C23A; margin-top: 0;">电路一：启保停控制</h4>
+                <p>• 加载示例，理解X0启动、X1停止、M0自锁逻辑</p>
+                <p>• 运行测试：点X0→Y0亮并保持→点X1→Y0灭</p>
+                
+                <h4 style="color: #67C23A;">电路二：交通信号灯</h4>
+                <p>• 依次点击X0→X1→X2模拟红黄绿切换</p>
+                
+                <h4 style="color: #67C23A;">电路三：互锁电路</h4>
+                <p>• 理解Y0和Y1互锁（防止同时得电）</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="📊 实验报告要求" name="3">
+              <div style="padding: 10px;">
+                <h4 style="color: #E6A23C; margin-top: 0;">记录内容：</h4>
+                <p><strong>思考题：</strong></p>
+                <p>① 为何自锁需要M0并联在X0旁？</p>
+                <p>② 互锁电路为何必须有常闭触点？</p>
+                <p>③ 中间继电器M与输出Y的区别？</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="💡 扩展挑战" name="4">
+              <div style="padding: 10px;">
+                <h4 style="color: #F56C6C; margin-top: 0;">高级任务：</h4>
+                <p><strong>挑战1：</strong>研究定时器实现延时控制</p>
+                <p><strong>挑战2：</strong>使用计数器"按5次才动作"</p>
+                <p><strong>挑战3：</strong>设计多工步顺序控制</p>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -178,6 +243,8 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { VideoPlay, VideoPause, Delete, Close, Plus } from '@element-plus/icons-vue'
+
+const activeSteps = ref([])  // 默认全部收起
 
 interface LadderComponent {
   type: 'NO' | 'NC' | 'COIL'  // NO:常开 NC:常闭 COIL:线圈

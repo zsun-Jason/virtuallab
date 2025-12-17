@@ -119,6 +119,202 @@
         </el-card>
       </el-col>
     </el-row>
+    
+    <!-- 实验指导手册 -->
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <h3>📖 实验指导手册</h3>
+          </template>
+          
+          <el-collapse v-model="activeSteps" accordion>
+            <el-collapse-item title="📚 实验目的与原理" name="1">
+              <div style="padding: 10px;">
+                <h4 style="color: #409EFF; margin-top: 0;">一、实验目的</h4>
+                <p>1. 理解温度控制系统的大惯性、纯滞后特性</p>
+                <p>2. 掌握PID控制在温度系统中的参数整定方法</p>
+                <p>3. 学会分析温度超调、振荡等现象的成因</p>
+                <p>4. 体验传感器延迟对控制性能的影响</p>
+                
+                <h4 style="color: #409EFF;">二、温度控制系统模型</h4>
+                <p><strong>热平衡方程：</strong>C·dT/dt = Q_in - Q_out</p>
+                <p>• <strong>Q_in（加热功率）：</strong>Q_in = P·u(t)，其中u(t)∈[0,1]为加热比例</p>
+                <p>• <strong>Q_out（散热功率）：</strong>Q_out = h·(T - T_amb)，散热与温差成正比</p>
+                <p>• <strong>C（热容）：</strong>系统储存热能的能力，决定升温速度</p>
+                <p>• <strong>h（散热系数）：</strong>环境散热能力，影响稳态温度</p>
+                
+                <p><strong>纯滞后特性：</strong></p>
+                <p>传感器测量值 T_measured(t) = T_actual(t - τ)，延迟τ=2秒</p>
+                <p>这导致控制器"看到的温度"比实际温度晚2秒，容易引起超调和振荡</p>
+                
+                <p style="background: #f0f9ff; padding: 10px; border-left: 4px solid #409EFF;">
+                  <strong>关键特性：</strong>温度系统是典型的<strong>大惯性+纯滞后</strong>系统。大惯性导致响应慢，纯滞后导致控制器"反应不及时"，两者叠加使得PID参数整定非常困难。
+                </p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="🔬 实验步骤（四个阶段）" name="2">
+              <div style="padding: 10px;">
+                <h4 style="color: #67C23A; margin-top: 0;">阶段一：系统特性认识</h4>
+                <p><strong>步骤1：开环响应测试</strong></p>
+                <p>• 将PID参数全部设为0（Kp=0, Ki=0, Kd=0）</p>
+                <p>• 目标温度80°C，加热功率500W，环境温度20°C</p>
+                <p>• 点击"开始运行"，观察温度变化曲线</p>
+                <p><strong>观察：</strong>温度缓慢上升，但<strong>无法达到80°C</strong>（因为散热平衡）</p>
+                <p><strong>分析：</strong>稳态温度 = 环境温度 + 加热功率/散热系数</p>
+                
+                <p><strong>步骤2：纯滞后影响观察</strong></p>
+                <p>• 观察图表中"实际温度"和"测量温度"两条曲线</p>
+                <p><strong>现象：</strong>测量温度滞后实际温度2秒</p>
+                <p><strong>思考：</strong>控制器基于测量值决策，会产生什么问题？</p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">阶段二：纯比例控制（P控制）</h4>
+                <p><strong>步骤1：小Kp测试</strong></p>
+                <p>• 设置Kp=1.0, Ki=0, Kd=0</p>
+                <p>• 目标80°C，重置并运行</p>
+                <p><strong>现象：</strong>温度上升，但存在<strong>稳态误差</strong>（约5-10°C）</p>
+                <p><strong>原因：</strong>比例控制无法消除稳态误差</p>
+                
+                <p><strong>步骤2：大Kp测试</strong></p>
+                <p>• 增大Kp=5.0, Ki=0, Kd=0</p>
+                <p><strong>现象：</strong>超调增大，可能出现振荡</p>
+                <p><strong>原因：</strong>纯滞后+大增益 → 控制器过度补偿</p>
+                <p style="background: #fff3cd; padding: 8px; border-radius: 4px;">
+                  💡 <strong>规律：</strong>Kp过小响应慢，Kp过大会振荡，需折中选择
+                </p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">阶段三：PI控制（消除稳态误差）</h4>
+                <p><strong>步骤1：加入积分项</strong></p>
+                <p>• 设置Kp=2.0, Ki=0.5, Kd=0</p>
+                <p>• 目标80°C，运行至稳定</p>
+                <p><strong>现象：</strong>温度最终<strong>精确达到80°C</strong>，无稳态误差</p>
+                <p><strong>原理：</strong>积分项累积误差，直到误差为0</p>
+                
+                <p><strong>步骤2：积分饱和测试</strong></p>
+                <p>• 增大Ki=2.0（其他参数不变）</p>
+                <p><strong>现象：</strong>超调明显增大，调节时间变长</p>
+                <p><strong>原因：</strong>积分项积累过快，导致"积分饱和"</p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">阶段四：完整PID控制（抑制超调）</h4>
+                <p><strong>步骤1：加入微分项</strong></p>
+                <p>• 设置Kp=2.0, Ki=0.5, Kd=1.0</p>
+                <p>• 目标80°C，观察响应曲线</p>
+                <p><strong>效果：</strong>超调减小，调节时间缩短</p>
+                <p><strong>原理：</strong>微分项预测温度变化趋势，提前制动</p>
+                
+                <p><strong>步骤2：抗扰动测试</strong></p>
+                <p>• 温度稳定在80°C后，将环境温度从20°C降至10°C</p>
+                <p><strong>观察：</strong>温度短暂下降，PID自动增大加热功率，重新稳定在80°C</p>
+                
+                <p><strong>步骤3：目标变化响应</strong></p>
+                <p>• 初始目标60°C，稳定后改为100°C</p>
+                <p>• 记录升温时间和超调量</p>
+                <p><strong>优化目标：</strong>调整PID参数，使超调<5%，调节时间<30秒</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="📊 实验报告要求" name="3">
+              <div style="padding: 10px;">
+                <h4 style="color: #E6A23C; margin-top: 0;">需记录与分析的内容：</h4>
+                <p><strong>1. 控制方式性能对比</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                  <thead>
+                    <tr style="background: #f5f7fa;">
+                      <th style="border: 1px solid #ddd; padding: 8px;">控制器类型</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">调节时间(s)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">超调量(%)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳态误差(°C)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳定性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">P控制(Kp=2)</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">PI控制(Kp=2, Ki=0.5)</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">PID控制(Kp=2, Ki=0.5, Kd=1)</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <p><strong>2. 必答思考题</strong></p>
+                <p>① 为什么纯比例控制存在稳态误差？从数学角度解释</p>
+                <p>② 传感器延迟2秒对控制的影响是什么？如何优化？</p>
+                <p>③ 如果加热功率不足（如200W），即使PID参数最优，能否达到100°C？为什么？</p>
+                <p>④ 为什么温度控制的Kp通常比位置/速度控制小很多？</p>
+                <p>⑤ 环境温度突变时，哪个PID参数起主要作用？</p>
+                
+                <p><strong>3. 性能指标记录</strong></p>
+                <p>• 目标温度80°C，环境20°C，加热功率500W：</p>
+                <p>  - 调节时间（95%准则）：___秒</p>
+                <p>  - 超调量：___%</p>
+                <p>  - 稳态误差：___°C</p>
+                <p>  - 最优PID参数：Kp=___, Ki=___, Kd=___</p>
+                
+                <p><strong>4. 波形图分析</strong></p>
+                <p>• 截图保存"实际温度"、"测量温度"、"加热比例"三条曲线</p>
+                <p>• 标注关键时间点：超调峰值时刻、首次进入误差带时刻</p>
+                <p>• 分析"测量温度"滞后对控制输出的影响</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="💡 扩展挑战" name="4">
+              <div style="padding: 10px;">
+                <h4 style="color: #F56C6C; margin-top: 0;">高级任务：</h4>
+                <p><strong>挑战1：Ziegler-Nichols整定法</strong></p>
+                <p>• 研究经典的Z-N参数整定方法</p>
+                <p>• 步骤：先找临界增益Ku（使系统持续振荡的Kp），测临界周期Tu</p>
+                <p>• 按公式计算：Kp=0.6Ku, Ki=2Kp/Tu, Kd=KpTu/8</p>
+                <p>• 对比经验参数和Z-N参数的性能差异</p>
+                
+                <p><strong>挑战2：Smith预估控制</strong></p>
+                <p>• 研究Smith预估器原理（补偿纯滞后）</p>
+                <p>• 思考：如何在已知延迟时间的情况下，提前预测温度变化？</p>
+                <p>• 设计改进方案：加入温度变化率的前馈补偿</p>
+                
+                <p><strong>挑战3：分段控制策略</strong></p>
+                <p>• 设计双模式控制：</p>
+                <p>  - 远离目标（|e|>10°C）：大功率快速加热</p>
+                <p>  - 接近目标（|e|<10°C）：精细PID控制</p>
+                <p>• 对比单一PID控制，分析性能提升</p>
+                
+                <p><strong>挑战4：能耗优化</strong></p>
+                <p>• 目标：在保证±2°C精度前提下，降低平均功耗</p>
+                <p>• 思路：调整PID参数，减少控制输出抖动</p>
+                <p>• 计算能效比：(达标时间×温度精度) / 总能耗</p>
+                
+                <p style="background: #fef0f0; padding: 10px; border-left: 4px solid #F56C6C; margin-top: 15px;">
+                  <strong>⚠️ 工程应用思考：</strong><br>
+                  温度控制广泛应用于化工、食品、医药等行业。思考：对于不同热容、不同延迟的温度系统（如小型恒温箱 vs 大型反应釜），PID参数差异会有多大？如何快速整定？
+                </p>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -132,6 +328,8 @@ const thermometerCanvas = ref<HTMLCanvasElement | null>(null)
 const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 let animationId: number | null = null
+
+const activeSteps = ref([])  // 默认全部收起
 
 const targetTemp = ref(80)
 const ambientTemp = ref(20)
