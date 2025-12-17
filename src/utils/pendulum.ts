@@ -126,9 +126,9 @@ export class LQRController {
   /**
    * 计算控制力
    * @param state 状态向量 [x, xDot, theta, thetaDot]
-   * @param target 目标位置
+   * @param _target 目标位置（暂未使用）
    */
-  compute(state: [number, number, number, number], target: number = 0): number {
+  compute(state: [number, number, number, number], _target: number = 0): number {
     const [x, xDot, theta, thetaDot] = state
     
     // 简化的控制律：主要稳定角度
