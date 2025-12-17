@@ -7,10 +7,11 @@ pipeline {
     
     environment {
         NODE_VERSION = '20.19.0'
-        DEPLOY_SERVER = 'your-ubuntu-server-ip'
-        DEPLOY_USER = 'ubuntu'
+        DEPLOY_SERVER = '20.51.254.65'
+        DEPLOY_USER = 'zsun'
         DEPLOY_PATH = '/var/www/virtuallab'
         APP_NAME = 'virtuallab'
+        SSH_CREDENTIALS_ID = 'ubuntu-server-ssh'
     }
     
     stages {
@@ -61,26 +62,25 @@ pipeline {
             }
         }
         
-        // 暂时注释Deploy阶段，等Ubuntu服务器配置完成后再启用
-        // stage('Deploy to Ubuntu Server') {
-        //     steps {
-        //         echo '🚀 部署到Ubuntu服务器...'
-        //         script {
-        //             sh """
-        //                 # 压缩构建产物
-        //                 tar -czf dist.tar.gz dist/
-        //                 
-        //                 # 上传到服务器
-        //                 scp dist.tar.gz ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-        //                 scp deploy.sh ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-        //                 scp ecosystem.config.js ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
-        //                 
-        //                 # 在服务器上执行部署脚本
-        //                 ssh ${DEPLOY_USER}@${DEPLOY_SERVER} "cd ${DEPLOY_PATH} && bash deploy.sh"
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Deploy to Ubuntu Server') {
+            steps {
+                echo '🚀 部署到Ubuntu服务器...'
+                sshagent(credentials: [env.SSH_CREDENTIALS_ID]) {
+                    sh """
+                        # 压缩构建产物
+                        tar -czf dist.tar.gz dist/
+                        
+                        # 上传到服务器
+                        scp -o StrictHostKeyChecking=no dist.tar.gz ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+                        scp -o StrictHostKeyChecking=no deploy.sh ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+                        scp -o StrictHostKeyChecking=no nginx.conf ${DEPLOY_USER}@${DEPLOY_SERVER}:${DEPLOY_PATH}/
+                        
+                        # 在服务器上执行部署脚本
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_SERVER} "cd ${DEPLOY_PATH} && bash deploy.sh"
+                    """
+                }
+            }
+        }
     }
     
     post {
