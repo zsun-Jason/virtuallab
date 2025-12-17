@@ -75,7 +75,7 @@ export class InvertedPendulum {
   /**
    * 计算导数（状态微分方程）
    */
-  private derivative(x: number, xDot: number, theta: number, thetaDot: number, force: number) {
+  private derivative(_x: number, xDot: number, theta: number, thetaDot: number, force: number) {
     const sinTheta = Math.sin(theta)
     const cosTheta = Math.cos(theta)
     const totalMass = this.M + this.m
@@ -134,10 +134,10 @@ export class LQRController {
     // 简化的控制律：主要稳定角度
     // 当theta>0(向右倾)时，需要正力F>0(向右推)
     const force = 
-      this.K[2] * theta +         // 角度项：theta>0 => F>0
-      this.K[3] * thetaDot +      // 角速度项：抑制摆动
-      this.K[0] * x +             // 位置项：拉回原点
-      this.K[1] * xDot            // 速度项：阻尼
+      (this.K[2] ?? 0) * theta +         // 角度项：theta>0 => F>0
+      (this.K[3] ?? 0) * thetaDot +      // 角速度项：抑制摆动
+      (this.K[0] ?? 0) * x +             // 位置项：拉回原点
+      (this.K[1] ?? 0) * xDot            // 速度项：阻尼
     
     // 限制控制力
     return Math.max(-100, Math.min(100, force))
