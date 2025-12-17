@@ -390,7 +390,7 @@ const simulate = () => {
   currentValue.value = system.update(controlOutput)
   
   // 记录数据
-  timeData.value.push(time.toFixed(2))
+  timeData.value.push(Number(time.toFixed(2)))
   setpointData.value.push(params.setpoint)
   outputData.value.push(parseFloat(currentValue.value.toFixed(2)))
   controlData.value.push(parseFloat(controlOutput.toFixed(2)))

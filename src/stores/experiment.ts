@@ -21,7 +21,7 @@ export const useExperimentStore = defineStore('experiment', () => {
   function updateExperiment(id: string, data: Partial<ExperimentData>) {
     const index = experiments.value.findIndex(e => e.id === id)
     if (index !== -1) {
-      experiments.value[index] = { ...experiments.value[index], ...data }
+      experiments.value[index] = { ...experiments.value[index], ...data } as ExperimentData
     }
   }
 

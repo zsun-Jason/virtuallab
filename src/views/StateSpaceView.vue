@@ -27,7 +27,7 @@
                 <el-input-number
                   v-for="j in order"
                   :key="`a-${i}-${j}`"
-                  v-model="matrices.A[i-1][j-1]"
+                  v-model="matrices.A[i-1]![j-1]"
                   :step="0.1"
                   size="small"
                   style="width: 80px; margin: 2px;"
@@ -41,7 +41,7 @@
                 <el-input-number
                   v-for="i in order"
                   :key="`b-${i}`"
-                  v-model="matrices.B[i-1][0]"
+                  v-model="matrices.B[i-1]![0]"
                   :step="0.1"
                   size="small"
                   style="width: 80px; margin: 2px;"
@@ -55,7 +55,7 @@
                 <el-input-number
                   v-for="i in order"
                   :key="`c-${i}`"
-                  v-model="matrices.C[0][i-1]"
+                  v-model="matrices.C[0]![i-1]"
                   :step="0.1"
                   size="small"
                   style="width: 80px; margin: 2px;"
@@ -346,10 +346,10 @@ const updateMatrices = () => {
   
   // 默认值：标准形式
   for (let i = 0; i < n - 1; i++) {
-    matrices.A[i][i + 1] = 1
+    matrices.A[i]![i + 1] = 1
   }
-  matrices.B[n - 1][0] = 1
-  matrices.C[0][0] = 1
+  matrices.B[n - 1]![0] = 1
+  matrices.C[0]![0] = 1
 }
 
 const loadExample = () => {
@@ -394,9 +394,15 @@ const simulate = () => {
     const stateDot = Array(n).fill(0)
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        stateDot[i] += matrices.A[i][j] * state[j]
+        const aij = matrices.A[i]?.[j]
+        if (aij !== undefined) {
+          stateDot[i] += aij * state[j]
+        }
       }
-      stateDot[i] += matrices.B[i][0] * u
+      const bi0 = matrices.B[i]?.[0]
+      if (bi0 !== undefined) {
+        stateDot[i] += bi0 * u
+      }
     }
     
     // 更新状态（欧拉法）
@@ -407,7 +413,10 @@ const simulate = () => {
     // 计算输出 y = Cx + Du
     let output = matrices.D * u
     for (let i = 0; i < n; i++) {
-      output += matrices.C[0][i] * state[i]
+      const ci = matrices.C[0]?.[i]
+      if (ci !== undefined) {
+        output += ci * state[i]
+      }
     }
     
     // 记录数据
@@ -432,26 +441,26 @@ const simulate = () => {
       series: [
         {
           name: '输出',
-          type: 'line',
+          type: 'line' as const,
           data: outputData,
           showSymbol: false,
           itemStyle: { color: '#409EFF' }
         },
         {
           name: '状态1',
-          type: 'line',
+          type: 'line' as const,
           data: state1Data,
           showSymbol: false,
           itemStyle: { color: '#67C23A' }
         },
         ...(n >= 2 ? [{
           name: '状态2',
-          type: 'line',
+          type: 'line' as const,
           data: state2Data,
           showSymbol: false,
           itemStyle: { color: '#E6A23C' }
         }] : [])
-      ]
+      ] as echarts.SeriesOption[]
     }
     responseChartInstance.setOption(option)
   }
@@ -480,10 +489,15 @@ const simulate = () => {
   
   // 计算特征值（简化版，仅用于2x2）
   if (n === 2) {
-    const a = matrices.A[0][0]
-    const b = matrices.A[0][1]
-    const c = matrices.A[1][0]
-    const d = matrices.A[1][1]
+    const a = matrices.A[0]?.[0]
+    const b = matrices.A[0]?.[1]
+    const c = matrices.A[1]?.[0]
+    const d = matrices.A[1]?.[1]
+    
+    if (a === undefined || b === undefined || c === undefined || d === undefined) {
+      ElMessage.error('矩阵元素未定义')
+      return
+    }
     
     const trace = a + d
     const det = a * d - b * c
@@ -516,8 +530,9 @@ const simulate = () => {
     }
     
     // 简化判断可控性和可观性
-    controllability.value = Math.abs(b) > 0.01
-    observability.value = Math.abs(matrices.C[0][0]) > 0.01 || Math.abs(matrices.C[0][1]) > 0.01
+    controllability.value = b !== undefined && Math.abs(b) > 0.01
+    observability.value = (matrices.C[0]?.[0] !== undefined && Math.abs(matrices.C[0][0]) > 0.01) || 
+                          (matrices.C[0]?.[1] !== undefined && Math.abs(matrices.C[0][1]) > 0.01)
   }
   
   ElMessage.success('仿真完成')

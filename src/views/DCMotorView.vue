@@ -611,7 +611,7 @@ const simulate = () => {
   // 记录数据（降采样）
   frameCount++
   if (frameCount % 50 === 0) {
-    timeData.value.push(time.toFixed(2))
+    timeData.value.push(Number(time.toFixed(2)))
     speedData.value.push(
       controlMode.value === 'position' 
         ? parseFloat(currentPosition.value.toFixed(1))

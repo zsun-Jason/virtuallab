@@ -289,6 +289,11 @@ const onDrop = (event: DragEvent) => {
   // 添加到最后一行
   const lastRung = rungs.value[rungs.value.length - 1]
   
+  if (!lastRung) {
+    ElMessage.warning('请先添加一行')
+    return
+  }
+  
   // 检查最后一行是否已有输出线圈
   const hasCoil = lastRung.some(c => c.type === 'COIL')
   if (compData.type === 'COIL' && hasCoil) {
@@ -314,8 +319,11 @@ const removeRung = (index: number) => {
 }
 
 const removeComponent = (rungIndex: number, compIndex: number) => {
-  rungs.value[rungIndex].splice(compIndex, 1)
-  if (rungs.value[rungIndex].length === 0) {
+  const rung = rungs.value[rungIndex]
+  if (!rung) return
+  
+  rung.splice(compIndex, 1)
+  if (rung.length === 0) {
     removeRung(rungIndex)
   }
 }

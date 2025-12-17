@@ -283,12 +283,16 @@ const plotNyquist = () => {
   
   magnitude.forEach((mag, i) => {
     const magLinear = Math.pow(10, mag / 20)
-    const phaseRad = (phase[i] * Math.PI) / 180
+    const currentPhase = phase[i] ?? 0
+    const phaseRad = (currentPhase * Math.PI) / 180
     realParts.push(magLinear * Math.cos(phaseRad))
     imagParts.push(magLinear * Math.sin(phaseRad))
   })
   
-  if (!chart) return
+  if (!chart) {
+    console.error('Chart not initialized')
+    return
+  }
   
   const option: echarts.EChartsOption = {
     tooltip: {

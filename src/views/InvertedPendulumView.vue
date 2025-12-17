@@ -373,7 +373,7 @@ const updateChart = () => {
         name: '摆角 (°)',
         type: 'line',
         yAxisIndex: 0,
-        data: angleData.value.map((val, idx) => [parseFloat(timeData.value[idx]), val]),
+        data: angleData.value.map((val, idx) => [timeData.value[idx], val]),
         itemStyle: { color: '#409EFF' },
         lineStyle: { width: 2 },
         showSymbol: false
@@ -382,7 +382,7 @@ const updateChart = () => {
         name: '小车位置 (m)',
         type: 'line',
         yAxisIndex: 1,
-        data: positionData.value.map((val, idx) => [parseFloat(timeData.value[idx]), val]),
+        data: positionData.value.map((val, idx) => [timeData.value[idx], val]),
         itemStyle: { color: '#67C23A' },
         lineStyle: { width: 2 },
         showSymbol: false
@@ -545,7 +545,7 @@ const simulate = () => {
   
   // 每5帧记录一次数据（减少数据密度，避免图表卡顿）
   if (Math.floor(time / dt) % 5 === 0) {
-    timeData.value.push(time.toFixed(2))
+    timeData.value.push(Number(time.toFixed(2)))
     angleData.value.push(parseFloat(pendulumAngle.value.toFixed(3)))
     positionData.value.push(parseFloat(cartPosition.value.toFixed(3)))
   }

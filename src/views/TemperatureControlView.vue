@@ -618,7 +618,7 @@ const simulate = () => {
   
   // 记录数据
   if (Math.floor(time * 10) % 5 === 0) {
-    timeData.value.push(time.toFixed(1))
+    timeData.value.push(Number(time.toFixed(1)))
     targetTempData.value.push(targetTemp.value)
     actualTempData.value.push(parseFloat(actualTemp.value.toFixed(2)))
     measuredTempData.value.push(parseFloat(measuredTemp.value.toFixed(2)))
