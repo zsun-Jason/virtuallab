@@ -1,11 +1,6 @@
 pipeline {
     agent any
     
-    // 配置触发器 - 每5分钟检查一次GitHub是否有新提交
-    triggers {
-        pollSCM('H/5 * * * *')  // 每5分钟轮询一次
-    }
-    
     tools {
         nodejs 'NodeJS 20.19.0'  // 必须与Global Tool Configuration中配置的名称一致
     }
