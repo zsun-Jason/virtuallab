@@ -127,6 +127,43 @@ npm run build
 npm run preview
 ```
 
+### 运行测试
+
+```bash
+# 运行所有测试
+npm test
+
+# 生成覆盖率报告
+npm run test:coverage
+
+# 可视化测试界面
+npm run test:ui
+
+# 监视模式
+npm run test:watch
+```
+
+## 🚀 部署指南
+
+本项目支持使用Jenkins自动部署到Ubuntu服务器。详细部署步骤请参考 [DEPLOYMENT.md](./DEPLOYMENT.md)。
+
+### 快速部署
+
+1. **配置Ubuntu服务器**（安装Nginx）
+2. **配置Jenkins Pipeline**
+3. **修改Jenkinsfile中的服务器地址**
+4. **推送代码触发自动部署**
+
+手动部署命令：
+
+```bash
+# 构建
+npm run build
+
+# 部署到服务器
+scp -r dist/* user@server:/var/www/virtuallab/
+```
+
 ## 📚 核心算法
 
 ### PID控制器
@@ -186,11 +223,37 @@ class PIDController {
 
 欢迎提交Issue和Pull Request！
 
+### 开发流程
+
+1. Fork本项目
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启Pull Request
+
+### 代码规范
+
+- 使用TypeScript编写代码
+- 遵循ESLint规则
+- 添加单元测试覆盖新功能
+- 确保所有测试通过 (`npm test`)
+
 ## 📄 开源协议
 
 MIT License
 
+## 📚 相关文档
+
+- [测试文档](./tests/README.md)
+- [部署指南](./DEPLOYMENT.md)
+- [测试总结报告](./TEST_SUMMARY.md)
+
+## 🔗 相关链接
+
+- GitHub仓库: https://github.com/zsun-Jason/virtuallab
+- 问题反馈: https://github.com/zsun-Jason/virtuallab/issues
+
 ---
 
-**开发团队**: 自动化实验平台小组  
-**最后更新**: 2025-12-16
+**开发团队**: 大连海事大学自动化实验平台小组  
+**最后更新**: 2025-12-17
