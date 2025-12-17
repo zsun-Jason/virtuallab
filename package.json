@@ -7,30 +7,38 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "vue": "^3.5.24",
-    "vue-router": "^4.4.5",
-    "pinia": "^2.2.6",
-    "element-plus": "^2.8.10",
     "@element-plus/icons-vue": "^2.3.1",
+    "@types/three": "^0.170.0",
+    "axios": "^1.7.9",
     "echarts": "^5.5.1",
-    "vue-echarts": "^7.0.3",
+    "element-plus": "^2.8.10",
+    "mathjs": "^14.0.1",
+    "pinia": "^2.2.6",
     "plotly.js-dist": "^2.35.2",
     "three": "^0.170.0",
-    "@types/three": "^0.170.0",
+    "vue": "^3.5.24",
+    "vue-echarts": "^7.0.3",
     "vue-i18n": "^10.0.4",
-    "axios": "^1.7.9",
-    "mathjs": "^14.0.1"
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/ui": "^4.0.16",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "happy-dom": "^20.0.11",
+    "sass": "^1.83.4",
     "typescript": "~5.9.3",
     "vite": "^7.2.4",
-    "vue-tsc": "^3.1.4",
-    "sass": "^1.83.4"
+    "vitest": "^4.0.16",
+    "vue-tsc": "^3.1.4"
   }
 }
