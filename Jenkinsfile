@@ -1,6 +1,11 @@
 pipeline {
     agent any
     
+    // 配置触发器
+    triggers {
+        githubPush()  // 启用GitHub Push触发
+    }
+    
     tools {
         nodejs 'NodeJS 20.19.0'  // 必须与Global Tool Configuration中配置的名称一致
     }
