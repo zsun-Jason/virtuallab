@@ -83,14 +83,25 @@
             <el-form-item v-if="inputType === 'sine'" label="频率(Hz)">
               <el-input-number v-model="sineFrequency" :min="0.1" :max="10" :step="0.1" />
             </el-form-item>
-            
-            <el-form-item>
-              <el-button type="primary" @click="simulate">
-                <el-icon><VideoPlay /></el-icon> 开始仿真
-              </el-button>
-              <el-button @click="loadExample">加载示例</el-button>
-            </el-form-item>
           </el-form>
+          
+          <div style="padding: 20px 40px;">
+            <el-button 
+              type="primary" 
+              size="default"
+              @click="simulate"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              <el-icon><VideoPlay /></el-icon> 开始仿真
+            </el-button>
+            <el-button 
+              size="default"
+              @click="loadExample"
+              style="width: 100%; height: 40px; display: block; margin: 0; padding: 0;"
+            >
+              加载示例
+            </el-button>
+          </div>
         </el-card>
       </el-col>
       
@@ -417,7 +428,7 @@ const formatComplex = (ev: {real: number, imag: number}): string => {
 
 <style scoped>
 .state-space {
-  padding: 20px;
+  padding: 0;
 }
 
 h2, h3, h4 {
@@ -425,7 +436,7 @@ h2, h3, h4 {
 }
 
 h2 {
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 }
 
 h3, h4 {

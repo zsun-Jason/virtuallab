@@ -19,12 +19,26 @@
               <el-input v-model="denominator" placeholder="例如: 1,3,2" />
               <span class="hint">输入多项式系数，用逗号分隔</span>
             </el-form-item>
-            
-            <el-form-item>
-              <el-button type="primary" @click="plotBode">绘制Bode图</el-button>
-              <el-button type="success" @click="plotNyquist">绘制Nyquist图</el-button>
-            </el-form-item>
           </el-form>
+          
+          <div style="padding: 20px 40px;">
+            <el-button 
+              type="primary" 
+              size="default"
+              @click="plotBode"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              绘制Bode图
+            </el-button>
+            <el-button 
+              type="success"
+              size="default"
+              @click="plotNyquist"
+              style="width: 100%; height: 40px; display: block; margin: 0; padding: 0;"
+            >
+              绘制Nyquist图
+            </el-button>
+          </div>
           
           <el-divider />
           
@@ -210,12 +224,15 @@ const loadExample2 = () => {
 
 <style scoped>
 .frequency-analysis {
-  padding: 20px;
+  padding: 0;
 }
 
 h2, h3 {
   color: #303133;
-  margin-bottom: 20px;
+}
+
+h2 {
+  margin: 0 0 20px 0;
 }
 
 h3 {

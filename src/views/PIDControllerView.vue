@@ -30,15 +30,34 @@
             <el-form-item label="时间常数">
               <el-input-number v-model="params.timeConstant" :min="0.1" :max="10" :step="0.1" />
             </el-form-item>
-            
-            <el-form-item>
-              <el-button type="primary" @click="startSimulation" :disabled="isRunning">
-                {{ isRunning ? '运行中...' : '开始仿真' }}
-              </el-button>
-              <el-button @click="stopSimulation" :disabled="!isRunning">停止</el-button>
-              <el-button @click="resetSimulation">重置</el-button>
-            </el-form-item>
           </el-form>
+          
+          <div style="padding: 20px 40px;">
+            <el-button 
+              type="primary" 
+              size="default"
+              @click="startSimulation" 
+              :disabled="isRunning"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              {{ isRunning ? '运行中...' : '开始仿真' }}
+            </el-button>
+            <el-button 
+              size="default"
+              @click="stopSimulation" 
+              :disabled="!isRunning"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              停止
+            </el-button>
+            <el-button 
+              size="default"
+              @click="resetSimulation"
+              style="width: 100%; height: 40px; display: block; margin: 0; padding: 0;"
+            >
+              重置
+            </el-button>
+          </div>
           
           <el-divider />
           
@@ -77,6 +96,166 @@
         </el-card>
       </el-col>
     </el-row>
+    
+    <!-- 实验指导手册 -->
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card>
+          <template #header>
+            <h3>📖 实验指导手册</h3>
+          </template>
+          
+          <el-collapse v-model="activeSteps" accordion>
+            <el-collapse-item title="📚 实验目的与原理" name="1">
+              <div style="padding: 10px;">
+                <h4 style="color: #409EFF; margin-top: 0;">一、实验目的</h4>
+                <p>1. 理解PID控制器三个参数的物理意义和作用</p>
+                <p>2. 掌握PID参数整定的基本方法</p>
+                <p>3. 学习分析系统性能指标：超调量、稳定时间、稳态误差</p>
+                <p>4. 培养控制系统调试与优化能力</p>
+                
+                <h4 style="color: #409EFF;">二、PID控制原理</h4>
+                <p><strong>控制律：</strong>u(t) = Kp·e(t) + Ki·∫e(t)dt + Kd·de(t)/dt</p>
+                <p><strong>• Kp（比例项）：</strong>根据当前误差大小产生控制作用。Kp越大，响应越快，但过大会引起振荡。</p>
+                <p><strong>• Ki（积分项）：</strong>消除稳态误差。Ki越大，消除误差越快，但过大会导致超调和振荡。</p>
+                <p><strong>• Kd（微分项）：</strong>预测误差变化趋势，提前施加阻尼。Kd增大可减少超调，但过大对噪声敏感。</p>
+                <p style="background: #f0f9ff; padding: 10px; border-left: 4px solid #409EFF;">
+                  <strong>经典整定法：</strong>Ziegler-Nichols法建议先调Kp至临界振荡，再根据公式计算Ki和Kd。本实验推荐采用试凑法逐步调优。
+                </p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="🔬 实验步骤（推荐顺序）" name="2">
+              <div style="padding: 10px;">
+                <h4 style="color: #67C23A; margin-top: 0;">步骤1：纯比例控制（P控制）</h4>
+                <p><strong>操作：</strong></p>
+                <p>• 设置Kp=1.0, Ki=0, Kd=0</p>
+                <p>• 目标值设为50，点击"开始仿真"</p>
+                <p><strong>观察：</strong>系统有稳态误差，无法到达目标值</p>
+                <p><strong>实验：</strong>逐步增大Kp（1.0 → 2.0 → 4.0 → 6.0），观察响应速度和振荡</p>
+                <p><strong>结论：</strong>Kp过小响应慢，过大产生振荡，且始终存在稳态误差</p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">步骤2：添加积分控制（PI控制）</h4>
+                <p><strong>操作：</strong></p>
+                <p>• 保持Kp=2.0，设置Ki=0.5, Kd=0</p>
+                <p>• 运行仿真，观察稳态误差变化</p>
+                <p><strong>观察：</strong>稳态误差逐渐消除，但可能出现超调</p>
+                <p><strong>实验：</strong>调整Ki（0.1 → 0.5 → 1.0 → 2.0），观察消除误差的速度和超调量</p>
+                <p style="background: #fff3cd; padding: 8px; border-radius: 4px;">
+                  💡 <strong>关键发现：</strong>Ki过小，消除误差慢；Ki过大，超调严重且可能振荡
+                </p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">步骤3：添加微分控制（PID控制）</h4>
+                <p><strong>操作：</strong></p>
+                <p>• 设置Kp=2.0, Ki=0.5, Kd=0.2</p>
+                <p>• 观察微分项对超调的抑制作用</p>
+                <p><strong>观察：</strong>超调量减小，系统更快稳定</p>
+                <p><strong>实验：</strong>调整Kd（0 → 0.1 → 0.3 → 0.5），观察对超调和振荡的影响</p>
+                <p><strong>注意：</strong>Kd过大会使系统对噪声敏感，实际应用需权衡</p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">步骤4：参数优化</h4>
+                <p><strong>目标：</strong>找到最佳参数组合，使系统快速稳定且超调小</p>
+                <p><strong>参考起点：</strong>Kp=2.0, Ki=0.5, Kd=0.2</p>
+                <p><strong>优化策略：</strong></p>
+                <p>① 先固定Ki和Kd，微调Kp找到响应速度与振荡的平衡点</p>
+                <p>② 调整Ki，在消除误差速度和超调之间取舍</p>
+                <p>③ 最后微调Kd，进一步抑制振荡</p>
+                <p><strong>性能指标：</strong>超调量<20%，稳定时间<10s，稳态误差<2%</p>
+                
+                <el-divider />
+                
+                <h4 style="color: #67C23A;">步骤5：系统特性测试</h4>
+                <p><strong>操作：</strong></p>
+                <p>• 使用优化后的参数</p>
+                <p>• 改变目标值（20、50、80），观察系统适应性</p>
+                <p>• 改变时间常数（1.0、2.0、5.0），测试参数鲁棒性</p>
+                <p><strong>思考：</strong>为什么时间常数变化时，最优PID参数会改变？</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="📊 实验报告要求" name="3">
+              <div style="padding: 10px;">
+                <h4 style="color: #E6A23C; margin-top: 0;">需记录与分析的内容：</h4>
+                <p><strong>1. 参数影响分析表</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                  <thead>
+                    <tr style="background: #f5f7fa;">
+                      <th style="border: 1px solid #ddd; padding: 8px;">参数</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">测试值</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">上升时间(s)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">超调量(%)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳态误差</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">Kp</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">1.0/2.0/4.0/6.0</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">Ki</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">0/0.5/1.0/2.0</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">Kd</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">0/0.1/0.3/0.5</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <p><strong>2. 必答思考题</strong></p>
+                <p>① 为什么纯比例控制无法消除稳态误差？</p>
+                <p>② Ki增大为何会导致超调增加？从积分项累积角度解释</p>
+                <p>③ 微分项Kd对噪声敏感的原因是什么？</p>
+                <p>④ 如果被控对象时间常数增大（响应变慢），应如何调整PID参数？</p>
+                
+                <p><strong>3. 最优参数记录</strong></p>
+                <p>• 针对默认系统（时间常数=2.0）的最优参数：Kp=___, Ki=___, Kd=___</p>
+                <p>• 系统性能指标：超调量=___%，稳定时间=___s，稳态误差=___</p>
+                <p>• 参数选择理由：___</p>
+              </div>
+            </el-collapse-item>
+            
+            <el-collapse-item title="💡 扩展挑战" name="4">
+              <div style="padding: 10px;">
+                <h4 style="color: #F56C6C; margin-top: 0;">高级任务：</h4>
+                <p><strong>挑战1：抗扰动能力测试</strong></p>
+                <p>• 设计方案测试系统的扰动抑制能力（提示：可通过改变目标值模拟扰动）</p>
+                <p>• 比较不同PID参数下的抗扰动性能</p>
+                
+                <p><strong>挑战2：参数自整定</strong></p>
+                <p>• 研究Ziegler-Nichols整定法则</p>
+                <p>• 尝试实现继电反馈法自动获取临界参数</p>
+                
+                <p><strong>挑战3：改进型PID</strong></p>
+                <p>• 了解积分分离、微分先行等改进算法</p>
+                <p>• 思考如何避免积分饱和问题</p>
+                
+                <p style="background: #fef0f0; padding: 10px; border-left: 4px solid #F56C6C; margin-top: 15px;">
+                  <strong>⚠️ 探索性问题：</strong><br>
+                  实际工程中PID控制器占据90%以上的控制应用。思考：为什么如此简单的算法能有如此广泛的应用？它的局限性在哪里？
+                </p>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -88,6 +267,8 @@ import { PIDController, FirstOrderSystem } from '../utils/control'
 const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 let animationId: number | null = null
+
+const activeSteps = ref([])  // 默认全部收起
 
 const params = reactive({
   kp: 1.0,
@@ -269,12 +450,12 @@ const resetSimulation = () => {
 
 <style scoped>
 .pid-controller {
-  padding: 20px;
+  padding: 0;
 }
 
 h2 {
   color: #303133;
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 }
 
 h3 {

@@ -431,7 +431,7 @@ const loadExample3 = () => {
 
 <style scoped>
 .plc-ladder {
-  padding: 20px;
+  padding: 0;
 }
 
 h2, h3, h4 {
@@ -439,7 +439,7 @@ h2, h3, h4 {
 }
 
 h2 {
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 }
 
 h3, h4 {

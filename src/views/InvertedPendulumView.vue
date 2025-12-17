@@ -184,20 +184,24 @@
                 <h4 style="color: #E6A23C; margin-top: 0;">需记录与分析的内容：</h4>
                 <p><strong>1. 参数影响分析表</strong></p>
                 <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
-                  <tr style="background: #f5f7fa;">
-                    <th style="border: 1px solid #ddd; padding: 8px;">增益</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">测试值</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">稳定时间(s)</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">最大超调</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">现象描述</th>
-                  </tr>
-                  <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">K1</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">3/5/8/10/20</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">...</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">...</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">...</td>
-                  </tr>
+                  <thead>
+                    <tr style="background: #f5f7fa;">
+                      <th style="border: 1px solid #ddd; padding: 8px;">增益</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">测试值</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">稳定时间(s)</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">最大超调</th>
+                      <th style="border: 1px solid #ddd; padding: 8px;">现象描述</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #ddd; padding: 8px;">K1</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">3/5/8/10/20</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                      <td style="border: 1px solid #ddd; padding: 8px;">...</td>
+                    </tr>
+                  </tbody>
                 </table>
                 
                 <p><strong>2. 必答思考题</strong></p>

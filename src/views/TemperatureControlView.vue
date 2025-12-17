@@ -40,15 +40,34 @@
               <el-input-number v-model="heaterPower" :min="100" :max="2000" :step="50" />
               <span class="hint">W</span>
             </el-form-item>
-            
-            <el-form-item>
-              <el-button type="primary" @click="startSimulation" :disabled="isRunning">
-                {{ isRunning ? '运行中...' : '开始仿真' }}
-              </el-button>
-              <el-button @click="stopSimulation" :disabled="!isRunning">停止</el-button>
-              <el-button @click="resetSimulation">重置</el-button>
-            </el-form-item>
           </el-form>
+          
+          <div style="padding: 20px 40px;">
+            <el-button 
+              type="primary" 
+              size="default"
+              @click="startSimulation" 
+              :disabled="isRunning"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              {{ isRunning ? '运行中...' : '开始仿真' }}
+            </el-button>
+            <el-button 
+              size="default"
+              @click="stopSimulation" 
+              :disabled="!isRunning"
+              style="width: 100%; height: 40px; display: block; margin: 0 0 10px 0; padding: 0;"
+            >
+              停止
+            </el-button>
+            <el-button 
+              size="default"
+              @click="resetSimulation"
+              style="width: 100%; height: 40px; display: block; margin: 0; padding: 0;"
+            >
+              重置
+            </el-button>
+          </div>
           
           <el-divider />
           
@@ -454,7 +473,7 @@ const resetSimulation = () => {
 
 <style scoped>
 .temperature-control {
-  padding: 20px;
+  padding: 0;
 }
 
 h2, h3, h4 {
@@ -462,7 +481,7 @@ h2, h3, h4 {
 }
 
 h2 {
-  margin-bottom: 20px;
+  margin: 0 0 20px 0;
 }
 
 h3, h4 {
